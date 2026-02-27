@@ -5,7 +5,7 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 
 # data architecture
 
-# tech Stack
+# tech stack
 - Terraform, AWS Lambda, AWS EventBridge, DynamoDB
 - Massive API (real-time market data)
 
@@ -27,3 +27,28 @@ date (String): Trading date in YYYY-MM-DD format (also the partition key)
 ticker (String): Stock symbol
 percentChange (Decimal): Percent change from open to close with its sign for frontend use
 closePrice (Decimal): Closing price
+
+# trade-offs and challenges 
+  
+Challenge: Free tier API limits ~5 requests/minute. 
+Solution: Added 12-second delays between API calls to stay within limits. 
+Trade-off: Backfill takes ~10 minutes but never fails due to rate limiting.
+ 
+Challenge: Empty dashboard on first deploy. 
+Solution: Automatic backfill populates last 7 trading days on first run. 
+Trade-off: First execution takes longer, but dashboard is immediately useful.
+
+Challenge: Market closed on weekends. 
+Solution: Backfill checks weekday() and skips Saturdays/Sundays before making API calls. 
+Trade-off: May look back 15 days to find 7 trading days, but saves wasted API calls.
+
+Challenge: Two different endpoints needed. 
+Solution: Use Daily Ticker Summary for backfill (specific dates), Previous Day Bar for daily runs (simpler). 
+Trade-off: Slightly more complex code, but optimized for each use case. 
+
+Challenge: Choosing DynamoDB partition key.
+Solution: Used date as key since primary access pattern is "retrieve last 7 days." Trade-off: Can't efficiently query "all TSLA history," but that's not a requirement.
+
+Challenge: Simplified deployment for others. 
+Solution: Removed AWS profile requirement—uses default credential
+Trade-off: Less control over AWS account selection, but drastically simpler setup.
