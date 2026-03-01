@@ -83,29 +83,30 @@ On first run (or if table has < 7 records), Lambda #1 automatically backfills hi
 
 # trade-offs and challenges 
   
-Challenge: Free tier API limits ~5 requests/minute. 
+Challenge: Free tier API limits ~5 requests/minute.  
 Solution: Added 12-second delays between API calls to stay within limits.    
 Trade-off: Backfill takes ~10 minutes but never fails due to rate limiting. 
  
-Challenge: Empty dashboard on first deploy. 
+Challenge: Empty dashboard on first deploy.  
 Solution: Automatic backfill populates last 7 trading days on first run. 
 Trade-off: First execution takes longer, but dashboard is immediately useful. 
 
-Challenge: Market closed on weekends. 
+Challenge: Market closed on weekends.  
 Solution: Backfill checks weekday() and skips Saturdays/Sundays before making API calls. 
 Trade-off: May look back 15 days to find 7 trading days, but saves wasted API calls.
 
-Challenge: Determining best EventBridge schedule time given the API free tier limitations.
-Solution: Runs at 12:30 AM PST TUES-SAT, when the free-tier API finishes processing the previous trading day's closing data.
+Challenge: Determining best EventBridge schedule time given the API free tier limitations.  
+Solution: Runs at 12:30 AM PST TUES-SAT, when the free-tier API finishes processing the previous trading day's closing data.  
 Trade-off: Rather than being able to see update right after market close, you have to wait until at least 12:30 AM the next day or next morning.
 
-Challenge: Two different endpoints needed. 
-Solution: Use Daily Ticker Summary for backfill (specific dates), Previous Day Bar for daily runs (simpler). 
+Challenge: Two different endpoints needed.  
+Solution: Use Daily Ticker Summary for backfill (specific dates), Previous Day Bar for daily runs (simpler).  
 Trade-off: Slightly more complex code, but optimized for each use case. 
 
-Challenge: Choosing DynamoDB partition key.
-Solution: Used date as key since primary access pattern is "retrieve last 7 days." Trade-off: Can't efficiently query "all TSLA history," but that's not a requirement.
+Challenge: Choosing DynamoDB partition key.  
+Solution: Used date as key since primary access pattern is "retrieve last 7 days."  
+Trade-off: Can't efficiently query "all TSLA history," but that's not a requirement.
 
-Challenge: Simplified deployment for others. 
-Solution: Removed AWS profile requirement—uses default credential
+Challenge: Simplified deployment for others.  
+Solution: Removed AWS profile requirement—uses default credential.  
 Trade-off: Less control over AWS account selection, but drastically simpler setup.
