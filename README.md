@@ -38,8 +38,33 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 ```
 
 6. Update the API_URL in frontend/app.js with the endpoint from step 5
+``` 
+const API_URL = "https://xxxx.execute-api.us-east-1.amazonaws.com/prod/movers";
+```
 
 7. Deploy to S3
+```
+
+aws s3 mb s3://your-own-bucket-name    
+aws s3api delete-public-access-block --bucket your-own-bucket-name   
+aws s3api put-bucket-policy --bucket your-own-bucket-name --policy '{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": "*",
+    "Action": "s3:GetObject",
+    "Resource": "arn:aws:s3:::your-own-bucket-name/*"
+  }]
+}'    
+aws s3 website s3://your-own-bucket-name --index-document index.html    
+aws s3 sync ./frontend s3://your-own-bucket-name    
+```
+
+8. Access live dashboard
+```
+http://your-own-bucket-name.s3-website-us-east-1.amazonaws.com
+```
+
 
 ## tear down
 ```
@@ -50,7 +75,7 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 ![Architecture Diagram](architecture-drawing.png)
 
 # security
-- API key stored as Terraform variable marked sensitive = true
+- API key stored as Terraform variable
 - Never committed to GitHub
 - Each Lambda has its own IAM role with least privilege permissions
 - Ingestion Lambda: write-only to DynamoDB
