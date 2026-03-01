@@ -42,7 +42,9 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 7. Deploy to S3
 
 ## tear down
+```
    terraform destroy
+```
 
 # data architecture
 
@@ -73,21 +75,21 @@ On first run (or if table has < 7 records), Lambda #1 automatically backfills hi
 
 # data schema
 
-Each DynamoDB record contains:
-date (String): Trading date in YYYY-MM-DD format (also the partition key)
-ticker (String): Stock symbol
-percentChange (Decimal): Percent change from open to close with its sign for frontend use
-closePrice (Decimal): Closing price
+# data schema
+- `date` (String): Trading date in YYYY-MM-DD format (partition key)
+- `ticker` (String): Stock symbol
+- `percentChange` (Decimal): Percent change from open to close, signed for frontend use
+- `closePrice` (Decimal): Closing price
 
 # trade-offs and challenges 
   
 Challenge: Free tier API limits ~5 requests/minute. 
-Solution: Added 12-second delays between API calls to stay within limits. 
-Trade-off: Backfill takes ~10 minutes but never fails due to rate limiting.
+Solution: Added 12-second delays between API calls to stay within limits.    
+Trade-off: Backfill takes ~10 minutes but never fails due to rate limiting. 
  
 Challenge: Empty dashboard on first deploy. 
 Solution: Automatic backfill populates last 7 trading days on first run. 
-Trade-off: First execution takes longer, but dashboard is immediately useful.
+Trade-off: First execution takes longer, but dashboard is immediately useful. 
 
 Challenge: Market closed on weekends. 
 Solution: Backfill checks weekday() and skips Saturdays/Sundays before making API calls. 
