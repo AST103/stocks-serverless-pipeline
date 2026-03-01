@@ -358,6 +358,11 @@ table {
     border-collapse: collapse;
 }
 
+thead th:nth-child(1) { width: 25%; }  /* Date */
+thead th:nth-child(2) { width: 25%; }  /* Ticker */
+thead th:nth-child(3) { width: 25%; }  /* % Change */
+thead th:nth-child(4) { width: 25%; }  /* Close Price */
+
 thead tr {
     background: #F4F6F9;
     border-bottom: 2px solid #E2E8F0;

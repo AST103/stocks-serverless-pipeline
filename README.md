@@ -47,6 +47,7 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 ```
 
 # data architecture
+![Architecture Diagram](architecture-drawing.png)
 
 # security
 - API key stored as Terraform variable marked sensitive = true
@@ -65,6 +66,7 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 - Auto-backfill on first deploy so the dashboard is immediately useful
 - Green/red color coded frontend showing gain vs loss
 - Duplicate write protection so the same date is never overwritten
+- Watchlist: AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA
 
 # backfilling logic
 On first run (or if table has < 7 records), Lambda #1 automatically backfills historical data:
@@ -72,8 +74,6 @@ On first run (or if table has < 7 records), Lambda #1 automatically backfills hi
 2. If < 7, fetches missing days using Daily Ticker Summary endpoint
 3. Writes each day's winner to DynamoDB
 4. Future runs execute normally with daily API endpoint
-
-# data schema
 
 # data schema
 - `date` (String): Trading date in YYYY-MM-DD format (partition key)
