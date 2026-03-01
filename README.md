@@ -11,20 +11,30 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 
 ## deploy
 1. Clone the repo
+```
    git clone https://github.com/AST103/stocks-serverless-pipeline
+```
 
 2. Go to the terraform directory
+```
    cd terraform
+```
 
 3. Create a terraform.tfvars file (don't commit this)
+```
    massive_api_key = "your_api_key_here"
+```
 
 4. Initialize and deploy
+```
    terraform init
    terraform apply
+```
 
 5. Grab the API endpoint from the output
+```
    api_endpoint = "https://xxxx.execute-api.us-east-1.amazonaws.com/prod/movers"
+```
 
 6. Update the API_URL in frontend/app.js with the endpoint from step 5
 
