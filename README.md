@@ -88,11 +88,11 @@ Solution: Added 12-second delays between API calls to stay within limits.
 Trade-off: Backfill takes ~10 minutes but never fails due to rate limiting. 
  
 Challenge: Empty dashboard on first deploy.  
-Solution: Automatic backfill populates last 7 trading days on first run. 
+Solution: Automatic backfill populates last 7 trading days on first run.  
 Trade-off: First execution takes longer, but dashboard is immediately useful. 
 
 Challenge: Market closed on weekends.  
-Solution: Backfill checks weekday() and skips Saturdays/Sundays before making API calls. 
+Solution: Backfill checks weekday() and skips Saturdays/Sundays before making API calls.  
 Trade-off: May look back 15 days to find 7 trading days, but saves wasted API calls.
 
 Challenge: Determining best EventBridge schedule time given the API free tier limitations.  
