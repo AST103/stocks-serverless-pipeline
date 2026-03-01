@@ -13,7 +13,7 @@ resource "aws_lambda_function" "ingestion_lambda" {
   runtime          = "python3.12"
   filename         = data.archive_file.ingestion_lambda_zip.output_path
   source_code_hash = data.archive_file.ingestion_lambda_zip.output_base64sha256
-  timeout          = 900 # set timeout to 60 seconds to give it enough time to fetch data and write to DynamoDB
+  timeout          = 900 # set timeout to 15 minutes since the API call can sometimes take a while to respond, and we don't want the Lambda to timeout before it gets the data
   memory_size      = 256
   layers           = ["arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p312-requests:21"] # add the requests layer to the Lambda function
   environment {
@@ -37,7 +37,7 @@ resource "aws_lambda_function" "api_lambda" {
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.12"
   filename         = data.archive_file.api_lambda_zip.output_path
-  source_code_hash = data.archive_file.api_lambda_zip.output_base64sha256
+  source_code_hash = data.archive_file.api_lambda_zip.output_base64sha256 #lets Terraform know to update lambda function
   timeout          = 30 # API lambda should be faster since it's just reading from DynamoDB, so we can give it a shorter timeout
   memory_size      = 128
   environment {

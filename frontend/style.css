@@ -23,6 +23,17 @@ body {
     gap: 0;
 }
 
+.topbar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0;
+}
+
 .topbar-links {
     display: flex;
     align-items: center;
@@ -111,11 +122,23 @@ body {
     border-bottom: 4px solid #003087;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     min-height: 70px;
+    overflow: hidden;
 }
 
 .mainnav-left {
     display: flex;
     align-items: center;
+}
+
+.mainnav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+    width: 100%;
 }
 
 .pmc-logo-wrap {
@@ -174,6 +197,7 @@ body {
 }
 
 .btn-custom-rates {
+    margin-left: 32px;
     background: #003087;
     color: white;
     border: none;
@@ -358,10 +382,26 @@ table {
     border-collapse: collapse;
 }
 
-thead th:nth-child(1) { width: 25%; }  /* Date */
-thead th:nth-child(2) { width: 25%; }  /* Ticker */
-thead th:nth-child(3) { width: 25%; }  /* % Change */
-thead th:nth-child(4) { width: 25%; }  /* Close Price */
+thead th:nth-child(1) {
+    width: 25%;
+}
+
+/* Date */
+thead th:nth-child(2) {
+    width: 25%;
+}
+
+/* Ticker */
+thead th:nth-child(3) {
+    width: 25%;
+}
+
+/* % Change */
+thead th:nth-child(4) {
+    width: 25%;
+}
+
+/* Close Price */
 
 thead tr {
     background: #F4F6F9;
@@ -478,17 +518,37 @@ tbody td:nth-child(4) {
     color: #9BAAB8;
 }
 
+/* mobile specific Styles */
 @media (max-width: 768px) {
     .topbar {
         display: none;
     }
 
-    .mainnav-links {
+    .mainnav-links,
+    .btn-custom-rates {
         display: none;
     }
 
     .mainnav {
-        padding: 0 16px;
+        padding: 0;
+    }
+
+    .mainnav-inner {
+        justify-content: flex-start;
+        margin: 0;
+    }
+
+    .mainnav-left {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    .pmc-logo-wrap {
+        margin-right: 0;
+        padding-right: 0;
+        border-right: none;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
     }
 
     .page-wrapper {

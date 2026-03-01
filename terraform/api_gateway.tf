@@ -57,7 +57,7 @@ resource "aws_api_gateway_deployment" "movers_api_deployment" {
   }
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = true # create new deployment before destroying old one to avoid any downtime
   }
 }
 
