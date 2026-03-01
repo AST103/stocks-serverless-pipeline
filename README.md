@@ -23,6 +23,7 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 3. Create a terraform.tfvars file (don't commit this)
 ```
    massive_api_key = "your_api_key_here"
+   aws_region = "us-east-1"
 ```
 
 4. Initialize and deploy
