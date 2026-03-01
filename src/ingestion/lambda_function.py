@@ -1,7 +1,7 @@
 # this is for our cron job
 import os
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import boto3
@@ -16,31 +16,32 @@ WATCHLIST = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA"]
 
 # to instantiate a DynamoDB resource
 dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table(TABLE_NAME)  
+table = dynamodb.Table(TABLE_NAME)
 
 
 def lambda_handler(event, context):
 
     try:
-
         ### WE SHOULD ONLY NEED TO BACKFILL ONCE, CAN REMOVE THIS CHECK AFTER A WEEK OF DATA HAS BEEN COLLECTED ###
         # check if table has less than 7 items, if so we need to backfill data for the past week
         response = table.scan(Select="COUNT")
         item_count = response.get("Count", 0)
 
         if item_count < 7:
-            print(f"Table has {item_count} items, backfilling data for the past week...")
+            print(
+                f"Table has {item_count} items, backfilling data for the past week..."
+            )
 
             current_count = item_count
-            for i in range(1,15):
+            for i in range(1, 15):
                 if current_count >= 7:
                     print("Table already has 7 or more items. Stopping backfill.")
                     break
 
-                target_date_obj = datetime.now() - timedelta(days=i)
+                target_date_obj = datetime.now(timezone.utc) - timedelta(days=i)
                 target_date = target_date_obj.strftime("%Y-%m-%d")
 
-                if target_date_obj.date() >= datetime.now().date():
+                if target_date_obj.date() >= datetime.now(timezone.utc).date():
                     print(f"{target_date} Skipping today.")
                     continue
 
@@ -48,9 +49,7 @@ def lambda_handler(event, context):
                     print(f"{target_date} is a weekend. Skipping.")
                     continue
 
-
-                try: # if already exists
-
+                try:  # if already exists
                     check = table.get_item(
                         Key={
                             "date": target_date,
@@ -58,13 +57,14 @@ def lambda_handler(event, context):
                     )
                     if "Item" in check:
                         print(f"Data for {target_date} already exists. Skipping fetch.")
-                        current_count += 1 # if it already exists we should still increment
+                        current_count += (
+                            1  # if it already exists we should still increment
+                        )
                         continue
 
                 except Exception as e:
                     print(f"Error checking for existing data on {target_date}: {e}")
                     continue
-
 
                 winner = fetch_winner_on_date(target_date)
                 if winner:
@@ -73,12 +73,10 @@ def lambda_handler(event, context):
                 else:
                     print(f"No winner found for {target_date}. Skipping.")
                 time.sleep(15)  # Rate limit protection during backfill
-        #### 
+        ####
 
-
-        winner = fetch_winner() 
+        winner = fetch_winner()
         if winner:
-
             success = write_winner_to_dynamodb(winner)
 
             if success:
@@ -87,7 +85,10 @@ def lambda_handler(event, context):
                     "body": f"The stock with the highest percent change today is: {winner['ticker']} with a change of {winner['percentChange']}%",
                 }
             else:
-                return {"statusCode": 500, "body": "Failed to write winner to DynamoDB."}
+                return {
+                    "statusCode": 500,
+                    "body": "Failed to write winner to DynamoDB.",
+                }
         else:
             return {"statusCode": 500, "body": "No winner found."}
 
@@ -125,11 +126,15 @@ def fetch_winner():
 
             open_price = data["results"][0]["o"]
             close_price = data["results"][0]["c"]
-            percent_change = ((close_price - open_price) / open_price) * 100  # Keep sign for green/red coloring
+            percent_change = (
+                (close_price - open_price) / open_price
+            ) * 100  # Keep sign for green/red coloring
 
             # timestamp t is in unix milliseconds, convert to date
             date = data["results"][0]["t"] / 1000  # div by 1000 to convert to seconds
-            date_obj = datetime.fromtimestamp(date)
+            date_obj = datetime.fromtimestamp(
+                date, tz=timezone.utc
+            )  # convert to datetime object in UTC
             date_str = date_obj.strftime("%Y-%m-%d")  # format as YYYY-MM-DD
 
             stock_data = {
@@ -141,7 +146,7 @@ def fetch_winner():
             results.append(stock_data)
 
             if idx < len(WATCHLIST) - 1:
-                time.sleep(12)  # Rate limit protection 
+                time.sleep(12)  # Rate limit protection
 
         # Handles network errors, timeouts, and HTTP errors like 4xx and 5xx status codes
         except requests.exceptions.RequestException as e:
@@ -159,7 +164,6 @@ def fetch_winner():
 
     # find the stock with the highest percent change (by absolute value)
     winner = max(results, key=lambda x: abs(x["percentChange"]))
-
     return winner
 
 
@@ -172,27 +176,31 @@ def fetch_winner_on_date(target_date):
             url = f"https://api.massive.com/v1/open-close/{stock}/{target_date}?adjusted=true&apiKey={API_KEY}"
             response = requests.get(
                 url=url, timeout=10
-                )  # set a timeout of 10 seconds for the request
-            
+            )  # set a timeout of 10 seconds for the request
+
             if response.status_code == 429:
                 print(f"Rate limit exceeded for {stock}. waiting...")
                 time.sleep(60)
                 response = requests.get(
                     url, timeout=10
                 )  # retry the request after waiting
-            
+
             response.raise_for_status()  # raise an exception for HTTP errors
 
             data = response.json()
 
             if not data.get("open") or not data.get("close"):
-                print(f"Missing open or close data for {stock} on {target_date}. Skipping.")
+                print(
+                    f"Missing open or close data for {stock} on {target_date}. Skipping."
+                )
                 continue
 
             date_str = data["from"]
             open_price = data["open"]
             close_price = data["close"]
-            percent_change = ((close_price - open_price) / open_price) * 100  # Keep sign for green/red coloring
+            percent_change = (
+                (close_price - open_price) / open_price
+            ) * 100  # Keep sign for green/red coloring
 
             stock_data = {
                 "date": date_str,
@@ -221,7 +229,7 @@ def fetch_winner_on_date(target_date):
     ## for debugging
     # print(f"Percent changes for {target_date}: {[{'ticker': r['ticker'], 'percentChange': r['percentChange']} for r in results]}")
 
-    ## 
+    ##
 
     # find the stock with the highest percent change (by absolute value)
     winner = max(results, key=lambda x: abs(x["percentChange"]))
@@ -241,12 +249,16 @@ def write_winner_to_dynamodb(winner):
         )
         # check if response contains an Item key, if so it means an item with that date already exists
         if "Item" in response:
-            print(f"Winner for {winner['ticker']} on {winner['date']} already exists in DynamoDB. Skipping write.")
+            print(
+                f"Winner for {winner['ticker']} on {winner['date']} already exists in DynamoDB. Skipping write."
+            )
             return True  # treat as success since the item is already there
 
         # if it doesn't exist, write it
         table.put_item(Item=winner)
-        print(f"Successfully wrote winner for {winner['ticker']} on {winner['date']} to DynamoDB.")
+        print(
+            f"Successfully wrote winner for {winner['ticker']} on {winner['date']} to DynamoDB."
+        )
         return True
 
     except Exception as e:

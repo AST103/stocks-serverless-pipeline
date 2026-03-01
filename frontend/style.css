@@ -1,0 +1,501 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', 'Open Sans', -apple-system, system-ui,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #F4F6F9;
+    min-height: 100vh;
+    color: #333;
+}
+
+.topbar {
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 40px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0;
+}
+
+.topbar-links {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-links a {
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 0 12px;
+    border-right: 1px solid #ccc;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.topbar-links a:first-child {
+    border-left: 1px solid #ccc;
+}
+
+.topbar-links a:hover {
+    color: #003087;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: 20px;
+}
+
+.topbar-phone {
+    font-size: 12px;
+    color: #333;
+    font-weight: 600;
+}
+
+.topbar-phone span {
+    color: #003087;
+    font-weight: 700;
+}
+
+.btn-support {
+    background: #31afdf;
+    color: white;
+    border: none;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    font-family: 'Montserrat', 'Open Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-login {
+    background: transparent;
+    color: #003087;
+    border: none;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Montserrat', 'Open Sans', sans-serif;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-login::after {
+    content: "\25B6";
+    font-size: 8px;
+    color: #003087;
+}
+
+.mainnav {
+    background: white;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 4px solid #003087;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-height: 70px;
+}
+
+.mainnav-left {
+    display: flex;
+    align-items: center;
+}
+
+.pmc-logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 24px;
+    padding-right: 24px;
+    border-right: 1px solid #ddd;
+}
+
+.logo-crop {
+    overflow: hidden;
+    height: 32px;
+}
+
+.logo-svg {
+    height: 90px;
+    width: auto;
+    margin-top: -24px;
+    display: block;
+}
+
+.proud-supporter-text {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #717073;
+    margin-top: 3px;
+    padding-left: 2px;
+}
+
+.mainnav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.mainnav-links a {
+    color: #333;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+.mainnav-links a:hover {
+    color: #003087;
+}
+
+.mainnav-right {
+    display: flex;
+    align-items: center;
+}
+
+.btn-custom-rates {
+    background: #003087;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Montserrat', 'Open Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+
+.btn-custom-rates:hover {
+    background: #002570;
+}
+
+.btn-custom-rates::after {
+    content: "\25B6";
+    font-size: 9px;
+}
+
+.page-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+}
+
+.page-header {
+    margin-bottom: 28px;
+}
+
+.section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #31afdf;
+    margin-bottom: 8px;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #003087;
+    line-height: 1.2;
+}
+
+.page-header p {
+    font-size: 15px;
+    color: #717073;
+    margin-top: 6px;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 16px rgba(0, 48, 135, 0.08);
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+}
+
+.card-header-strip {
+    background: #003087;
+    display: flex;
+    align-items: stretch;
+}
+
+.strip-accent {
+    width: 5px;
+    background: #f1c400;
+    /* PennyMac gold */
+    flex-shrink: 0;
+}
+
+.card-header-content {
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.card-header-content h2 {
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.live-dot {
+    width: 7px;
+    height: 7px;
+    background: #31afdf;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.3);
+    }
+}
+
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #717073;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 16px;
+    border: 3px solid #E2E8F0;
+    border-top: 3px solid #31afdf;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading p {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #717073;
+}
+
+
+.error {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.error-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: #C0392B;
+}
+
+.error p {
+    font-size: 15px;
+    color: #C0392B;
+    font-weight: 500;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr {
+    background: #F4F6F9;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+thead th {
+    padding: 13px 24px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #717073;
+}
+
+thead th:nth-child(3),
+thead th:nth-child(4) {
+    text-align: right;
+}
+
+tbody tr {
+    border-bottom: 1px solid #EDF0F5;
+    transition: background 0.15s ease;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #F8FAFD;
+}
+
+tbody td {
+    padding: 17px 24px;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+tbody td:nth-child(3),
+tbody td:nth-child(4) {
+    text-align: right;
+}
+
+.date {
+    color: #717073;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.ticker {
+    font-weight: 700;
+    font-size: 15px;
+    color: #003087;
+    letter-spacing: 0.8px;
+}
+
+.percent-change {
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.positive {
+    color: #1A7F4B;
+    background: #E8F7EF;
+}
+
+.negative {
+    color: #C0392B;
+    background: #FDF0EE;
+}
+
+.arrow {
+    font-size: 10px;
+}
+
+.price {
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.last-updated {
+    padding: 13px 24px;
+    background: #F4F6F9;
+    text-align: right;
+    font-size: 12px;
+    color: #717073;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-top: 1px solid #E2E8F0;
+}
+
+.footer {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.footer p {
+    font-size: 13px;
+    color: #717073;
+    line-height: 1.8;
+}
+
+.footer .footer-note {
+    font-size: 11px;
+    color: #9BAAB8;
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        display: none;
+    }
+
+    .mainnav-links {
+        display: none;
+    }
+
+    .mainnav {
+        padding: 0 16px;
+    }
+
+    .page-wrapper {
+        padding: 24px 16px 40px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+    thead th,
+    tbody td {
+        padding: 12px 16px;
+    }
+}

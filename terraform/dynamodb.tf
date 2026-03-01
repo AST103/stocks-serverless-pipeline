@@ -1,8 +1,8 @@
 # Create the table
 resource "aws_dynamodb_table" "stock_winners" {
-  name           = "stock-winners"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "date"
+  name         = "stock-winners"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "date"
 
   attribute {
     name = "date"

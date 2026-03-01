@@ -3,15 +3,55 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 
 # setup
 
+## prerequisites
+- Terraform >= 1.0 installed
+- AWS CLI installed and configured (`aws configure`)
+- Python 3.12
+- A Massive API key (massiveapi.com)
+
+## deploy
+1. Clone the repo
+   git clone https://github.com/yourusername/stocks-serverless-pipeline
+
+2. Go to the terraform directory
+   cd terraform
+
+3. Create a terraform.tfvars file (don't commit this)
+   massive_api_key = "your_api_key_here"
+
+4. Initialize and deploy
+   terraform init
+   terraform apply
+
+5. Grab the API endpoint from the output
+   api_endpoint = "https://xxxx.execute-api.us-east-1.amazonaws.com/prod/movers"
+
+6. Update the API_URL in frontend/app.js with the endpoint from step 5
+
+7. Deploy to S3
+
+## tear down
+   terraform destroy
+
 # data architecture
+
+# security
+- API key stored as Terraform variable marked sensitive = true
+- Never committed to GitHub
+- Each Lambda has its own IAM role with least privilege permissions
+- Ingestion Lambda: write-only to DynamoDB
+- API Lambda: read-only from DynamoDB
 
 # tech stack
 - Terraform, AWS Lambda, AWS EventBridge, DynamoDB
 - Massive API (real-time market data)
 
 # features
-- REST API returning last 7 days of stocks with highest % change
-
+- Automated daily analysis using EventBridge cron
+- REST API returning last 7 days of top moving stocks
+- Auto-backfill on first deploy so the dashboard is immediately useful
+- Green/red color coded frontend showing gain vs loss
+- Duplicate write protection so the same date is never overwritten
 
 # backfilling logic
 On first run (or if table has < 7 records), Lambda #1 automatically backfills historical data:
@@ -41,6 +81,10 @@ Trade-off: First execution takes longer, but dashboard is immediately useful.
 Challenge: Market closed on weekends. 
 Solution: Backfill checks weekday() and skips Saturdays/Sundays before making API calls. 
 Trade-off: May look back 15 days to find 7 trading days, but saves wasted API calls.
+
+Challenge: Determining best EventBridge schedule time given the API free tier limitations.
+Solution: Runs at 12:30 AM PST TUES-SAT, when the free-tier API finishes processing the previous trading day's closing data.
+Trade-off: Rather than being able to see update right after market close, you have to wait until at least 12:30 AM the next day or next morning.
 
 Challenge: Two different endpoints needed. 
 Solution: Use Daily Ticker Summary for backfill (specific dates), Previous Day Bar for daily runs (simpler). 
