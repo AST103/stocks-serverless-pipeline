@@ -11,7 +11,7 @@ Serverless AWS pipeline that tracks daily stock market movers and displays a 7-d
 
 ## deploy
 1. Clone the repo
-   git clone https://github.com/yourusername/stocks-serverless-pipeline
+   git clone https://github.com/AST103/stocks-serverless-pipeline
 
 2. Go to the terraform directory
    cd terraform
