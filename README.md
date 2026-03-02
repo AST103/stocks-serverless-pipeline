@@ -87,6 +87,7 @@ http://your-own-bucket-name.s3-website-us-east-1.amazonaws.com
 
 # features
 - Automated daily analysis using EventBridge cron
+- Automatic retry policy if the ingestion Lambda fails/times out
 - REST API returning last 7 days of top moving stocks
 - Auto-backfill on first deploy so the dashboard is immediately useful
 - Green/red color coded frontend showing gain vs loss
