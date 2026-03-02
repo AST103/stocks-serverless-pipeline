@@ -11,6 +11,11 @@ resource "aws_cloudwatch_event_target" "stock_check_target" {
   rule      = aws_cloudwatch_event_rule.stock_check.name
   target_id = "IngestStockData"
   arn       = aws_lambda_function.ingestion_lambda.arn
+
+  retry_policy { 
+    maximum_retry_attempts = 2 # 3 tries in total
+    maximum_event_age_in_seconds = 3600 # retry lambda up to 2 times within 1 hr
+  }
 }
 
 # allow event bridge to invoke the lambda function
